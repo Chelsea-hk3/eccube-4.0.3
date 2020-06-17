@@ -55,8 +55,7 @@ final class NoUnsetCastFixer extends AbstractFixer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      */
     private function fixUnsetCast(Tokens $tokens, $index)
     {
@@ -67,6 +66,11 @@ final class NoUnsetCastFixer extends AbstractFixer
 
         $varIndex = $tokens->getNextMeaningfulToken($index);
         if (null === $varIndex || !$tokens[$varIndex]->isGivenKind(T_VARIABLE)) {
+            return;
+        }
+
+        $afterVar = $tokens->getNextMeaningfulToken($varIndex);
+        if (null === $afterVar || !$tokens[$afterVar]->equalsAny([';', [T_CLOSE_TAG]])) {
             return;
         }
 

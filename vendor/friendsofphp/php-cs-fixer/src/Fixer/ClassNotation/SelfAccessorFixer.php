@@ -100,7 +100,6 @@ class Sample
     /**
      * Replace occurrences of the name of the classy element by "self" (if possible).
      *
-     * @param Tokens $tokens
      * @param string $namespace
      * @param string $name
      * @param int    $startIndex
@@ -151,7 +150,7 @@ class Sample
                 }
                 $prevToken = $tokens[$tokens->getPrevMeaningfulToken($classStartIndex)];
             }
-            if ($prevToken->isGivenKind(T_OBJECT_OPERATOR)) {
+            if ($prevToken->isGivenKind([T_OBJECT_OPERATOR, T_STRING])) {
                 continue;
             }
 

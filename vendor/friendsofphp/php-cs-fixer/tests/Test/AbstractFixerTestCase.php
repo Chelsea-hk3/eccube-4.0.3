@@ -31,6 +31,7 @@ use Prophecy\Argument;
 abstract class AbstractFixerTestCase extends TestCase
 {
     use AssertTokensTrait;
+    use IsIdenticalConstraint;
 
     /**
      * @var LinterInterface
@@ -116,28 +117,28 @@ abstract class AbstractFixerTestCase extends TestCase
         $fileIsSupported = $this->fixer->supports($file);
 
         if (null !== $input) {
-            $this->assertNull($this->lintSource($input));
+            static::assertNull($this->lintSource($input));
 
             Tokens::clearCache();
             $tokens = Tokens::fromCode($input);
 
             if ($fileIsSupported) {
-                $this->assertTrue($this->fixer->isCandidate($tokens), 'Fixer must be a candidate for input code.');
-                $this->assertFalse($tokens->isChanged(), 'Fixer must not touch Tokens on candidate check.');
+                static::assertTrue($this->fixer->isCandidate($tokens), 'Fixer must be a candidate for input code.');
+                static::assertFalse($tokens->isChanged(), 'Fixer must not touch Tokens on candidate check.');
                 $fixResult = $this->fixer->fix($file, $tokens);
-                $this->assertNull($fixResult, '->fix method must return null.');
+                static::assertNull($fixResult, '->fix method must return null.');
             }
 
-            $this->assertThat(
+            static::assertThat(
                 $tokens->generateCode(),
                 self::createIsIdenticalStringConstraint($expected),
                 'Code build on input code must match expected code.'
             );
-            $this->assertTrue($tokens->isChanged(), 'Tokens collection built on input code must be marked as changed after fixing.');
+            static::assertTrue($tokens->isChanged(), 'Tokens collection built on input code must be marked as changed after fixing.');
 
             $tokens->clearEmptyTokens();
 
-            $this->assertSame(
+            static::assertSame(
                 \count($tokens),
                 \count(array_unique(array_map(static function (Token $token) {
                     return spl_object_hash($token);
@@ -147,25 +148,25 @@ abstract class AbstractFixerTestCase extends TestCase
 
             Tokens::clearCache();
             $expectedTokens = Tokens::fromCode($expected);
-            $this->assertTokens($expectedTokens, $tokens);
+            static::assertTokens($expectedTokens, $tokens);
         }
 
-        $this->assertNull($this->lintSource($expected));
+        static::assertNull($this->lintSource($expected));
 
         Tokens::clearCache();
         $tokens = Tokens::fromCode($expected);
 
         if ($fileIsSupported) {
             $fixResult = $this->fixer->fix($file, $tokens);
-            $this->assertNull($fixResult, '->fix method must return null.');
+            static::assertNull($fixResult, '->fix method must return null.');
         }
 
-        $this->assertThat(
+        static::assertThat(
             $tokens->generateCode(),
             self::createIsIdenticalStringConstraint($expected),
             'Code build on expected code must not change.'
         );
-        $this->assertFalse($tokens->isChanged(), 'Tokens collection built on expected code must not be marked as changed after fixing.');
+        static::assertFalse($tokens->isChanged(), 'Tokens collection built on expected code must not be marked as changed after fixing.');
     }
 
     /**
@@ -178,7 +179,7 @@ abstract class AbstractFixerTestCase extends TestCase
         try {
             $this->linter->lintSource($source)->check();
         } catch (\Exception $e) {
-            return $e->getMessage()."\n\nSource:\n${source}";
+            return $e->getMessage()."\n\nSource:\n{$source}";
         }
     }
 
@@ -204,27 +205,5 @@ abstract class AbstractFixerTestCase extends TestCase
         }
 
         return $linter;
-    }
-
-    /**
-     * @todo Remove me when this class will end up in dedicated package.
-     *
-     * @param string $expected
-     */
-    private static function createIsIdenticalStringConstraint($expected)
-    {
-        $candidates = array_filter([
-            'PhpCsFixer\PhpunitConstraintIsIdenticalString\Constraint\IsIdenticalString',
-            'PHPUnit\Framework\Constraint\IsIdentical',
-            'PHPUnit_Framework_Constraint_IsIdentical',
-        ], function ($className) { return class_exists($className); });
-
-        if (empty($candidates)) {
-            throw new \RuntimeException('PHPUnit not installed?!');
-        }
-
-        $candidate = array_shift($candidates);
-
-        return new $candidate($expected);
     }
 }

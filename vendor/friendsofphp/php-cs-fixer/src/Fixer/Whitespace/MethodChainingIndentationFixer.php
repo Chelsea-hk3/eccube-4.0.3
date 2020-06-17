@@ -90,8 +90,7 @@ final class MethodChainingIndentationFixer extends AbstractFixer implements Whit
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index  index of the first token on the line to indent
+     * @param int $index index of the first token on the line to indent
      *
      * @return string
      */
@@ -121,8 +120,7 @@ final class MethodChainingIndentationFixer extends AbstractFixer implements Whit
     }
 
     /**
-     * @param int    $index  position of the T_OBJECT_OPERATOR token
-     * @param Tokens $tokens
+     * @param int $index position of the T_OBJECT_OPERATOR token
      *
      * @return bool
      */
@@ -147,8 +145,7 @@ final class MethodChainingIndentationFixer extends AbstractFixer implements Whit
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index  index of the indentation token
+     * @param int $index index of the indentation token
      *
      * @return null|string
      */
@@ -163,29 +160,26 @@ final class MethodChainingIndentationFixer extends AbstractFixer implements Whit
 
     private function getIndentContentAt(Tokens $tokens, $index)
     {
-        for ($i = $index; $i >= 0; --$i) {
-            if (!$tokens[$index]->isGivenKind([T_WHITESPACE, T_INLINE_HTML])) {
-                continue;
-            }
+        if (!$tokens[$index]->isGivenKind([T_WHITESPACE, T_INLINE_HTML])) {
+            return '';
+        }
 
-            $content = $tokens[$index]->getContent();
+        $content = $tokens[$index]->getContent();
 
-            if ($tokens[$index]->isWhitespace() && $tokens[$index - 1]->isGivenKind(T_OPEN_TAG)) {
-                $content = $tokens[$index - 1]->getContent().$content;
-            }
+        if ($tokens[$index]->isWhitespace() && $tokens[$index - 1]->isGivenKind(T_OPEN_TAG)) {
+            $content = $tokens[$index - 1]->getContent().$content;
+        }
 
-            if (Preg::match('/\R/', $content)) {
-                return $content;
-            }
+        if (Preg::match('/\R/', $content)) {
+            return $content;
         }
 
         return '';
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $start  index of first meaningful token on previous line
-     * @param int    $end    index of last token on previous line
+     * @param int $start index of first meaningful token on previous line
+     * @param int $end   index of last token on previous line
      *
      * @return bool
      */

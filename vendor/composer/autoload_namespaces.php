@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'UpdateHelper\\' => array($vendorDir . '/kylekatarnls/update-helper/src'),
     'Twig_Extensions_' => array($vendorDir . '/twig/extensions/lib'),
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'SunCat\\MobileDetectBundle' => array($vendorDir . '/suncat/mobile-detect-bundle'),
@@ -13,6 +14,5 @@ return array(
     'Pimple' => array($vendorDir . '/pimple/pimple/lib'),
     'Knp\\Component' => array($vendorDir . '/knplabs/knp-components/src'),
     'Eccube' => array($vendorDir . '/ec-cube/plugin-installer/src'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
 );

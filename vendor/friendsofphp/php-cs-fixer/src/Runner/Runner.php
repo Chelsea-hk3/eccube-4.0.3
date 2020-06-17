@@ -19,6 +19,7 @@ use PhpCsFixer\Cache\DirectoryInterface;
 use PhpCsFixer\Differ\DifferInterface;
 use PhpCsFixer\Error\Error;
 use PhpCsFixer\Error\ErrorsManager;
+use PhpCsFixer\Event\Event;
 use PhpCsFixer\FileReader;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\FixerFileProcessedEvent;
@@ -26,7 +27,6 @@ use PhpCsFixer\Linter\LinterInterface;
 use PhpCsFixer\Linter\LintingException;
 use PhpCsFixer\Linter\LintingResultInterface;
 use PhpCsFixer\Tokenizer\Tokens;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -286,7 +286,6 @@ final class Runner
 
     /**
      * @param string $name
-     * @param Event  $event
      */
     private function dispatchEvent($name, Event $event)
     {
@@ -294,6 +293,15 @@ final class Runner
             return;
         }
 
-        $this->eventDispatcher->dispatch($name, $event);
+        // BC compatibility < Sf 4.3
+        if (
+            !$this->eventDispatcher instanceof \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+        ) {
+            $this->eventDispatcher->dispatch($name, $event);
+
+            return;
+        }
+
+        $this->eventDispatcher->dispatch($event, $name);
     }
 }

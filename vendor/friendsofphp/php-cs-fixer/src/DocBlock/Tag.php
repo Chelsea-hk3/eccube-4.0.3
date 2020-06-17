@@ -49,8 +49,6 @@ class Tag
 
     /**
      * Create a new tag instance.
-     *
-     * @param Line $line
      */
     public function __construct(Line $line)
     {
@@ -94,7 +92,7 @@ class Tag
             throw new \RuntimeException('Cannot set name on unknown tag.');
         }
 
-        $this->line->setContent(Preg::replace("/@${current}/", "@${name}", $this->line->getContent(), 1));
+        $this->line->setContent(Preg::replace("/@{$current}/", "@{$name}", $this->line->getContent(), 1));
 
         $this->name = $name;
     }

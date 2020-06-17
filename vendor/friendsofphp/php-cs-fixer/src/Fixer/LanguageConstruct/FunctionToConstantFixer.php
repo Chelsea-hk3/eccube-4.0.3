@@ -29,12 +29,12 @@ use PhpCsFixer\Tokenizer\Tokens;
 final class FunctionToConstantFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface
 {
     /**
-     * @var string[]
+     * @var array<string, Token[]>
      */
     private static $availableFunctions;
 
     /**
-     * @var array<string, Token>
+     * @var array<string, Token[]>
      */
     private $functionsFixMap;
 
@@ -158,7 +158,6 @@ final class FunctionToConstantFixer extends AbstractFixer implements Configurati
     }
 
     /**
-     * @param Tokens  $tokens
      * @param int     $index
      * @param int     $braceOpenIndex
      * @param int     $braceCloseIndex
@@ -182,8 +181,7 @@ final class FunctionToConstantFixer extends AbstractFixer implements Configurati
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      *
      * @return null|array
      */

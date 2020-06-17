@@ -17,6 +17,7 @@ use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class provides a way to create a group of fixers.
@@ -94,6 +95,7 @@ final class FixerFactory
         if (null === $builtInFixers) {
             $builtInFixers = [];
 
+            /** @var SplFileInfo $file */
             foreach (SymfonyFinder::create()->files()->in(__DIR__.'/Fixer') as $file) {
                 $relativeNamespace = $file->getRelativePath();
                 $fixerClass = 'PhpCsFixer\\Fixer\\'.($relativeNamespace ? $relativeNamespace.'\\' : '').$file->getBasename('.php');
@@ -125,8 +127,7 @@ final class FixerFactory
     }
 
     /**
-     * @param FixerInterface $fixer
-     * @param bool           $isCustom
+     * @param bool $isCustom
      *
      * @return $this
      */
@@ -150,8 +151,6 @@ final class FixerFactory
 
     /**
      * Apply RuleSet on fixers to filter out all unwanted fixers.
-     *
-     * @param RuleSetInterface $ruleSet
      *
      * @return $this
      */
@@ -214,8 +213,6 @@ final class FixerFactory
     }
 
     /**
-     * @param FixerInterface $fixer
-     *
      * @return null|string[]
      */
     private function getFixersConflicts(FixerInterface $fixer)

@@ -47,6 +47,15 @@ final class SquareBraceTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
+    public function getPriority()
+    {
+        // must run after CurlyBraceTransformer
+        return -1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredPhpVersionId()
     {
         // Short array syntax was introduced in PHP 5.4, but the fixer is smart
@@ -72,8 +81,7 @@ final class SquareBraceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      */
     private function transformIntoArraySquareBrace(Tokens $tokens, $index)
     {
@@ -84,8 +92,7 @@ final class SquareBraceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      */
     private function transformIntoDestructuringSquareBrace(Tokens $tokens, $index)
     {
@@ -111,8 +118,7 @@ final class SquareBraceTransformer extends AbstractTransformer
     /**
      * Check if token under given index is short array opening.
      *
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      *
      * @return bool
      */
@@ -151,8 +157,7 @@ final class SquareBraceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      *
      * @return bool
      */

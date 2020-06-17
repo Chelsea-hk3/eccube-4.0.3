@@ -41,7 +41,7 @@ final class UseTransformer extends AbstractTransformer
      */
     public function getPriority()
     {
-        // Should run after CurlyBraceTransformer
+        // Should run after CurlyBraceTransformer and before TypeColonTransformer
         return -5;
     }
 
@@ -96,8 +96,7 @@ final class UseTransformer extends AbstractTransformer
     /**
      * Check if token under given index is `use` statement for lambda function.
      *
-     * @param Tokens $tokens
-     * @param int    $index
+     * @param int $index
      *
      * @return bool
      */
